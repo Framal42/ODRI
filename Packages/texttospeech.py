@@ -29,6 +29,9 @@ def read_input_int():
     request_int = 1000
     while no_valid_input:
         request = read_input()
+
+        # Take the last word/single thing
+        request = request.split(" ")[-1]
         try:
             request_int = int(request)
             no_valid_input = False

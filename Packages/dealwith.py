@@ -157,7 +157,101 @@ def deal_with_held_button():
 
 def deal_with_keypad():
     # 3
-    return
+    symbols_array = [[" o with a bar ", " q ", " magnifying glass "],  # 0
+                     [" pyramid ", " A "],  # 1
+                     [" lambda ", " n with bar "],  # 2
+                     [" weird n ", " sideways n ", " zig zag "],  # 3
+                     [" sideways t ", " triangle ", " strange "],  # 4
+                     [" h "],  # 5
+                     [" reverse c "],  # 6
+                     [" reverse e ", " reverse epsilon ", " diaeresis "],  # 7
+                     [" loop ", " c q "],  # 8
+                     [" white star ", " empty star "],  # 9
+                     [" question ", " mark "],  # 10
+                     [" copyright "],  # 11
+                     [" comma ", " cat ", " cat's "],  # 12
+                     [" i k ", " i ", " k "],  # 13
+                     [" r ", " unfinished three "],  # 14
+                     [" six ", " 6 "],  # 15
+                     [" paragraph ", " p "],  # 16
+                     [" b ", " upside down p "],  # 17
+                     [" smile ", " smiley "],  # 18
+                     [" psi ", " chandelier ", " candelabra "],  # 19
+                     [" c with a dot ", " c "],  # 20
+                     [" three ", " 3 ", " antenna ", "antennae"],  # 21
+                     [" black star ", " filled star "],  # 22
+                     [" not equal ", " ki "],  # 23
+                     [" a e ", " ae "],  # 24
+                     [" capital n ", " large n "],  # 25
+                     [" omega "]]  # 26
+
+    # Hardcoded columns in the manual
+    columns_array = [[0, 1, 2, 3, 4, 5, 6],
+                     [7, 0, 6, 8, 9, 5, 10],
+                     [11, 12, 8, 13, 14, 2, 9],
+                     [15, 16, 17, 4, 13, 10, 18],
+                     [19, 18, 17, 20, 16, 21, 22],
+                     [15, 7, 23, 24, 19, 25, 26]]
+
+    text_to_speech("""Please list the four symbols on the keypad. If you need a refresher of the names of symbols,
+say help. Caution, this takes a while.""")
+    request = read_input()
+    if " help " in request:
+        for index, symbols in enumerate(symbols_array):
+            text_to_speech("symbol " + index + ": " + "".join(symbols))
+    else:
+        request_sanitized = []
+        for index, array in enumerate(symbols_array):
+            if any(m in request for m in array):
+                request_sanitized.append(index)
+        request_sanitized = set(request_sanitized)
+        if len(request_sanitized) == 4:
+            return
+
+        else:
+            while len(request_sanitized) != 4:
+                if len(request_sanitized) < 4:
+                    while len(request_sanitized) < 4:
+                        text_to_speech("""Only these symbols were recognized: """)
+                        for index, symbol_index in enumerate(request_sanitized):
+                            text_to_speech(index + ": " + symbols_array[symbol_index][0])
+                        text_to_speech("""Please speak the missing symbols or help.""")
+                        request = read_input()
+                        if " help " in request:
+                            for index, symbols in enumerate(symbols_array):
+                                text_to_speech("symbol " + index + ": " + "".join(symbols))
+                        else:
+                            for index, array in enumerate(symbols_array):
+                                if any(m in request for m in array):
+                                    request_sanitized.add(index)
+
+                elif len(request_sanitized) > 4:
+                    while len(request_sanitized) > 4:
+                        text_to_speech("""Too many symbols were recognized: """)
+                        for index, symbol_index in enumerate(request_sanitized):
+                            text_to_speech(index + ": " + symbols_array[symbol_index][0])
+                        text_to_speech("""Please speak the symbols to remove.""")
+                        request = read_input()
+
+                        # if " help " in request:
+                        #     text_to_speech("""These are the symbols currently selected: """)
+                        #     for index, symbols_index in enumerate(request_sanitized):
+                        #         text_to_speech(index + ": " + symbols_array[symbol_index][0])
+                        # else:
+
+                        for index, array in enumerate(symbols_array):
+                            if any(m in request for m in array):
+                                request_sanitized.remove(index)
+            for index, column in enumerate(columns_array):
+                if request_sanitized.issubset(column):
+                    text_to_speech("""Column found. Press the buttons in this order,
+ignoring symbols you do not recognize:""")
+                    for symbol in column:
+                        text_to_speech(symbols_array[symbol][0])
+                    break
+                else:
+                    text_to_speech("""No corresponding column found. Exiting.""")
+                    break
 
 
 def deal_with_simon():
@@ -245,11 +339,10 @@ def lit_car_indicator():
 
 
 def lit_frk_indicator():
-    text_to_speech("""Is there a lit indcator with label F R K anywhere on the bomb?""")
+    text_to_speech("""Is there a lit indicator with label F R K anywhere on the bomb?""")
     request = read_input()
     matches = [" yes ", " correct ", " indeed ", " confirm "]
     if any(m in request for m in matches):
         return True
     else:
         return False
-    
