@@ -41,8 +41,7 @@ def game_loop():
         output = """Bomb defusal in progress. Please state the name of a module or describe it, and I will assist you. 
 You can also say: quit, exit, or stop to stop this defusal attempt."""
         text_to_speech(output)
-        request = input("Input: ")
-        request = request.lower()
+        request = read_input()
 
         # 0
         matches_quit = ["quit", "exit", "stop"]
@@ -162,12 +161,11 @@ def select_module(module_score_array):
 
     elif len(flagged_modules) == 1:
         output = ("Your description matches the module: " + module_num_to_string(flagged_modules[0]) +
-                  ". Answer confirm or cancel")
+                  " Answer confirm or cancel")
         text_to_speech(output)
-        request = input("Input: ")
-        request = request.lower()
+        request = read_input()
 
-        if "confirm" in request:
+        if any(m in request for m in [" confirm ", " yes ", " ok "]):
             return flagged_modules[0]
         else:
             return 16

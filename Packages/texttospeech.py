@@ -31,7 +31,7 @@ def read_input_int():
         request = read_input()
 
         # Take the last word/single thing
-        request = request.split(" ")[-1]
+        request = request.split(" ")[-2]
         try:
             request_int = int(request)
             no_valid_input = False

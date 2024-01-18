@@ -12,9 +12,10 @@ def deal_with_simple_wire():
         text_to_speech("""Please read out the color of the wires in order. Recognized colors are: white, blue,
 red, yellow, black.""")
         request = read_input()
-
+        print(request)
         request_array = request.split(" ")
-        matches = [" white ", " blue ", " red ", " yellow ", " black "]
+        print(request_array)
+        matches = ["white", "blue", "red", "yellow", "black"]
         request_array_sanitized = []
         for word in request_array:
             if word in matches:
@@ -33,6 +34,8 @@ red, yellow, black.""")
 
                 else:
                     text_to_speech("""Cut the last wire.""")
+
+                module_active = False
             case 4:
                 odd = serial_number_odd()
                 if (request_array_sanitized.count("red") > 1) and odd:
@@ -49,6 +52,8 @@ red, yellow, black.""")
 
                 else:
                     text_to_speech("""Cut the second wire.""")
+
+                module_active = False
             case 5:
                 odd = serial_number_odd()
                 if request_array_sanitized[4] == "black" and odd:
@@ -62,6 +67,8 @@ red, yellow, black.""")
 
                 else:
                     text_to_speech("""Cut the first wire.""")
+
+                module_active = False
             case 6:
                 odd = serial_number_odd()
                 if "yellow" not in request_array_sanitized and odd:
@@ -75,6 +82,8 @@ red, yellow, black.""")
 
                 else:
                     text_to_speech("""Cut the fourth wire.""")
+
+                module_active = False
             case _:
                 text_to_speech("""The number of wires spoken is not valid. Please try again.""")
 
@@ -101,19 +110,16 @@ def deal_with_button():
         return
 
     batteries_num = number_of_batteries()
-    car_indicator = lit_car_indicator()
 
     if button_text == "detonate" and batteries_num > 1:
         text_to_speech("""Press and immediately release the button.""")
         return
 
-    if button_color == "white" and car_indicator:
+    if button_color == "white" and lit_car_indicator():
         deal_with_held_button()
         return
 
-    frk_indicator = lit_frk_indicator()
-
-    if batteries_num > 2 and frk_indicator:
+    if batteries_num > 2 and lit_frk_indicator():
         text_to_speech("""Press and immediately release the button.""")
         return
 
@@ -198,60 +204,59 @@ say help. Caution, this takes a while.""")
     request = read_input()
     if " help " in request:
         for index, symbols in enumerate(symbols_array):
-            text_to_speech("symbol " + index + ": " + "".join(symbols))
-    else:
-        request_sanitized = []
-        for index, array in enumerate(symbols_array):
-            if any(m in request for m in array):
-                request_sanitized.append(index)
-        request_sanitized = set(request_sanitized)
-        if len(request_sanitized) == 4:
-            return
+            text_to_speech("symbol " + str(index) + ": " + " : ".join(symbols))
+        text_to_speech("""Please list the four symbols on the keypad.""")
+        request = read_input()
 
-        else:
-            while len(request_sanitized) != 4:
-                if len(request_sanitized) < 4:
-                    while len(request_sanitized) < 4:
-                        text_to_speech("""Only these symbols were recognized: """)
-                        for index, symbol_index in enumerate(request_sanitized):
-                            text_to_speech(index + ": " + symbols_array[symbol_index][0])
-                        text_to_speech("""Please speak the missing symbols or help.""")
-                        request = read_input()
-                        if " help " in request:
-                            for index, symbols in enumerate(symbols_array):
-                                text_to_speech("symbol " + index + ": " + "".join(symbols))
-                        else:
-                            for index, array in enumerate(symbols_array):
-                                if any(m in request for m in array):
-                                    request_sanitized.add(index)
-
-                elif len(request_sanitized) > 4:
-                    while len(request_sanitized) > 4:
-                        text_to_speech("""Too many symbols were recognized: """)
-                        for index, symbol_index in enumerate(request_sanitized):
-                            text_to_speech(index + ": " + symbols_array[symbol_index][0])
-                        text_to_speech("""Please speak the symbols to remove.""")
-                        request = read_input()
-
-                        # if " help " in request:
-                        #     text_to_speech("""These are the symbols currently selected: """)
-                        #     for index, symbols_index in enumerate(request_sanitized):
-                        #         text_to_speech(index + ": " + symbols_array[symbol_index][0])
-                        # else:
-
+    request_sanitized = []
+    for index, array in enumerate(symbols_array):
+        if any(m in request for m in array):
+            request_sanitized.append(index)
+    request_sanitized = set(request_sanitized)
+    if len(request_sanitized) != 4:
+        while len(request_sanitized) != 4:
+            if len(request_sanitized) < 4:
+                while len(request_sanitized) < 4:
+                    text_to_speech("""Only these symbols were recognized: """)
+                    for index, symbol_index in enumerate(request_sanitized):
+                        text_to_speech(str(index + 1) + ": " + symbols_array[symbol_index][0])
+                    text_to_speech("""Please speak the missing symbols or help.""")
+                    request = read_input()
+                    if " help " in request:
+                        for index, symbols in enumerate(symbols_array):
+                            text_to_speech("symbol " + index + ": " + " : ".join(symbols))
+                    else:
                         for index, array in enumerate(symbols_array):
                             if any(m in request for m in array):
-                                request_sanitized.remove(index)
-            for index, column in enumerate(columns_array):
-                if request_sanitized.issubset(column):
-                    text_to_speech("""Column found. Press the buttons in this order,
+                                request_sanitized.add(index)
+
+            elif len(request_sanitized) > 4:
+                while len(request_sanitized) > 4:
+                    text_to_speech("""Too many symbols were recognized: """)
+                    for index, symbol_index in enumerate(request_sanitized):
+                        text_to_speech(str(index + 1) + ": " + symbols_array[symbol_index][0])
+                    text_to_speech("""Please speak the symbols to remove.""")
+                    request = read_input()
+
+                    # if " help " in request:
+                    #     text_to_speech("""These are the symbols currently selected: """)
+                    #     for index, symbols_index in enumerate(request_sanitized):
+                    #         text_to_speech(index + ": " + symbols_array[symbol_index][0])
+                    # else:
+
+                    for index, array in enumerate(symbols_array):
+                        if any(m in request for m in array):
+                            request_sanitized.remove(index)
+
+    for index, column in enumerate(columns_array):
+        if request_sanitized.issubset(column):
+            text_to_speech("""Column found. Press the buttons in this order,
 ignoring symbols you do not recognize:""")
-                    for symbol in column:
-                        text_to_speech(symbols_array[symbol][0])
-                    break
-                else:
-                    text_to_speech("""No corresponding column found. Exiting.""")
-                    break
+            for symbol in column:
+                text_to_speech(symbols_array[symbol][0])
+            break
+            return
+    text_to_speech("""No corresponding column found. Exiting.""")
 
 
 def deal_with_simon():
