@@ -44,9 +44,9 @@ You can also say: quit, exit, or stop to stop this defusal attempt."""
         request = read_input()
 
         # 0
-        matches_quit = ["quit", "exit", "stop"]
+        matches_quit = [" quit ", " exit ", " stop "]
         # 1
-        matches_wires = ["simple wire", "wire", "horizontal"]
+        matches_wires = [" simple wire ", " wire ", " horizontal "]
         # 2
         matches_button = ["button", "large", "cover", "abort", "detonate", "hold"]
         # 3

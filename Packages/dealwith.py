@@ -255,13 +255,64 @@ ignoring symbols you do not recognize:""")
             for symbol in column:
                 text_to_speech(symbols_array[symbol][0])
             break
-            return
+
     text_to_speech("""No corresponding column found. Exiting.""")
 
 
 def deal_with_simon():
     # 4
-    return
+    text_to_speech("""Please speak the number of strikes or fails so far.""")
+    while True:
+        strikes_num = read_input_int()
+        if 0 <= strikes_num <= 2:
+            break
+        else:
+            text_to_speech("""Invalid number of strikes.""")
+    color_not_found = True
+    request_sanitized = []
+    while color_not_found:
+        text_to_speech("""Please state the color of the flashing button.""")
+        request = read_input()
+        request_sanitized = []
+        matches = [" red ", " blue ", " green ", " yellow "]
+        for index, match in enumerate(matches):
+            if match in request:
+                request_sanitized.append(match)
+        if len(request_sanitized) != 1:
+            text_to_speech("""Invalid input. Try again.""")
+        else:
+            color_not_found = False
+    match strikes_num:
+        case 0:
+            match request_sanitized[0]:
+                case 0:
+                    text_to_speech("""Press the blue button, then simply copy the pattern that plays.""")
+                case 1:
+                    text_to_speech("""Press the yellow button,then simply copy the pattern that plays.""")
+                case 2:
+                    text_to_speech("""Press the green button, then simply copy the pattern that plays.""")
+                case 3:
+                    text_to_speech("""Press the red button, then simply copy the pattern that plays.""")
+        case 1:
+            match request_sanitized[0]:
+                case 0:
+                    text_to_speech("""Press the red button, then simply copy the pattern that plays.""")
+                case 1:
+                    text_to_speech("""Press the blue button,then simply copy the pattern that plays.""")
+                case 2:
+                    text_to_speech("""Press the yellow button, then simply copy the pattern that plays.""")
+                case 3:
+                    text_to_speech("""Press the green button, then simply copy the pattern that plays.""")
+        case 2:
+            match request_sanitized[0]:
+                case 0:
+                    text_to_speech("""Press the yellow button, then simply copy the pattern that plays.""")
+                case 1:
+                    text_to_speech("""Press the green button,then simply copy the pattern that plays.""")
+                case 2:
+                    text_to_speech("""Press the blue button, then simply copy the pattern that plays.""")
+                case 3:
+                    text_to_speech("""Press the red button, then simply copy the pattern that plays.""")
 
 
 def deal_with_who_first():
