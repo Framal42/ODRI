@@ -36,6 +36,7 @@ quit, exit, or stop to close the program."""
 
 
 def game_loop():
+    # 2nd lowest level loop, choosing what module to handle.
     game_running = True
     while game_running:
         output = """Bomb defusal in progress. Please state the name of a module or describe it, and I will assist you. 

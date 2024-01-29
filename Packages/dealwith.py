@@ -317,46 +317,516 @@ def deal_with_simon():
 
 def deal_with_who_first():
     # 5
-    return
+
+    # reference array
+    step_1_display_array = [(" yes ", "middle left"),
+                            (" first ", "top right"),
+                            (" display ", "bottom right"),
+                            (" okay ", "top right"),
+                            (" says ", "bottom right"),
+                            (" nothing ", "middle left"),
+                            (" black ", "bottom left"),  # blank display
+                            (" blank ", "middle right"),
+                            (" no ", "bottom right"),
+                            (" led ", "middle left"),   # Same pronunciation warning, handle
+                            (" lead ", "bottom right"),
+                            (" leed ", "bottom left"),
+                            (" read ", "middle right"),  # same pronunciation warning, handle by giving
+                            (" red ", "middle right"),   # options and spelling
+                            (" reed ", "bottom left"),
+                            (" hold on ", "bottom right"),
+                            (" you are ", "bottom right"),
+                            (" you ", "middle right"),
+                            (" your ", "middle right"),   # Same pronunciation warning
+                            (" you're ", "middle right"),
+                            (" ur ", "top left"),
+                            (" there ", "bottom right"),  # Same pronunciation warning
+                            (" they're ", "bottom left"),
+                            (" their ", "middle right"),
+                            (" they are ", "middle left"),
+                            (" see ", "bottom right"),   # Same pronunciation warning
+                            (" c ", "top right"),
+                            (" cee ", "bottom right")]
+
+    step_2_display_array = [(" ready ", ["YES", "OKAY", "WHAT", "MIDDLE", "LEFT", "PRESS", "RIGHT", "BLANK", "READY",
+                                         "NO", "FIRST", "UHHH", "NOTHING", "WAIT"]),
+                            (" first ", ["LEFT", "OKAY", "YES", "MIDDLE", "NO", "RIGHT", "NOTHING", "UHHH", "WAIT",
+                                         "READY", "BLANK", "WHAT", "PRESS", "FIRST"]),
+                            (" no ", ["BLANK", "UHHH", "WAIT", "FIRST", "WHAT", "READY", "RIGHT", "YES", "NOTHING",
+                                      "LEFT", "PRESS", "OKAY", "NO", "MIDDLE"]),
+                            (" blank ", ["WAIT", "RIGHT", "OKAY", "MIDDLE", "BLANK", "PRESS", "READY", "NOTHING", "NO",
+                                         "WHAT", "LEFT", "UHHH", "YES", "FIRST"]),
+                            (" nothing ", ["UHHH", "RIGHT", "OKAY", "MIDDLE", "YES", "BLANK", "NO", "PRESS", "LEFT",
+                                           "WHAT", "WAIT", "FIRST", "NOTHING", "READY"]),
+                            (" yes ", ["OKAY", "RIGHT", "UHHH", "MIDDLE", "FIRST", "WHAT", "PRESS", "READY", "NOTHING",
+                                       "YES", "LEFT", "BLANK", "NO", "WAIT"]),
+                            (" what ", ["UHHH", "WHAT", "LEFT", "NOTHING", "READY", "BLANK", "MIDDLE", "NO", "OKAY",
+                                        "FIRST", "WAIT", "YES", "PRESS", "RIGHT"]),
+                            # To catch all possible lenghts of uh.
+                            # TODO make sure this works when implementing voice input
+                            (" uh", ["READY", "NOTHING", "LEFT", "WHAT", "OKAY", "YES", "RIGHT", "NO", "PRESS",
+                                     "BLANK", "UHHH", "MIDDLE", "WAIT", "FIRST"]),
+                            (" left ", ["RIGHT", "LEFT", "FIRST", "NO", "MIDDLE", "YES", "BLANK", "WHAT", "UHHH",
+                                        "WAIT", "PRESS", "READY", "OKAY", "NOTHING"]),
+                            (" right ", ["YES", "NOTHING", "READY", "PRESS", "NO", "WAIT", "WHAT", "RIGHT", "MIDDLE",
+                                         "LEFT", "UHHH", "BLANK", "OKAY", "FIRST"]),
+                            (" middle ", ["BLANK", "READY", "OKAY", "WHAT", "NOTHING", "PRESS", "NO", "WAIT", "LEFT",
+                                          "MIDDLE", "RIGHT", "FIRST", "UHHH", "YES"]),
+                            (" okay ", ["MIDDLE", "NO", "FIRST", "YES", "UHHH", "NOTHING", "WAIT", "OKAY", "LEFT",
+                                        "READY", "BLANK", "PRESS", "WHAT", "RIGHT"]),
+                            (" wait ", ["UHHH", "NO", "BLANK", "OKAY", "YES", "LEFT", "FIRST", "PRESS", "WHAT", "WAIT",
+                                        "NOTHING", "READY", "RIGHT", "MIDDLE"]),
+                            (" press ", ["RIGHT", "MIDDLE", "YES", "READY", "PRESS", "OKAY", "NOTHING", "UHHH", "BLANK",
+                                         "LEFT", "FIRST", "WHAT", "NO", "WAIT"]),
+                            (" you ", ["SURE", "YOU ARE", "YOUR", "YOU\'RE", "NEXT", "UH HUH", "UR", "HOLD", "WHAT?",
+                                       "YOU", "UH UH", "LIKE", "DONE", "U"]),
+                            (" you are ", ["YOUR", "NEXT", "LIKE", "UH HUH", "WHAT?", "DONE", "UH UH", "HOLD", "YOU",
+                                           "U", "YOU\'RE", "SURE", "UR", "YOU ARE"]),
+                            (" your ", ["UH UH", "YOU ARE", "UH HUH", "YOUR", "NEXT", "UR", "SURE", "U", "YOU\'RE",
+                                        "YOU", "WHAT?", "HOLD", "LIKE", "DONE"]),
+                            (" you\'re ", ["YOU", "YOU\'RE", "UR", "NEXT", "UH UH", "YOU ARE", "U", "YOUR", "WHAT?",
+                                           "UH HUH", "SURE", "DONE", "LIKE", "HOLD"]),
+                            (" ur ", ["DONE", "U", "UR", "UH HUH", "WHAT?", "SURE", "YOUR", "HOLD", "YOU\'RE", "LIKE",
+                                      "NEXT", "UH UH", "YOU ARE", "YOU"]),
+                            (" u ", ["UH HUH", "SURE", "NEXT", "WHAT?", "YOU\'RE", "UR", "UH UH", "DONE", "U", "YOU",
+                                     "LIKE", "HOLD", "YOU ARE", "YOUR"]),
+                            (" uh huh ", ["UH HUH", "YOUR", "YOU ARE", "YOU", "DONE", "HOLD", "UH UH", "NEXT", "SURE",
+                                          "LIKE", "YOU\'RE", "UR", "U", "WHAT?"]),
+                            (" uh uh ", ["UR", "U", "YOU ARE", "YOU\'RE", "NEXT", "UH UH", "DONE", "YOU", "UH HUH",
+                                         "LIKE", "YOUR", "SURE", "HOLD", "WHAT?"]),
+                            (" what ", ["YOU", "HOLD", "YOU\'RE", "YOUR", "U", "DONE", "UH UH", "LIKE", "YOU ARE",
+                                        "UH HUH", "UR", "NEXT", "WHAT?", "SURE"]),
+                            (" done ", ["SURE", "UH HUH", "NEXT", "WHAT?", "YOUR", "UR", "YOU\'RE", "HOLD", "LIKE",
+                                        "YOU", "U", "YOU ARE", "UH UH", "DONE"]),
+                            (" next ", ["WHAT?", "UH HUH", "UH UH", "YOUR", "HOLD", "SURE", "NEXT", "LIKE", "DONE",
+                                        "YOU ARE", "UR", "YOU\'RE", "U", "YOU"]),
+                            (" hold ", ["YOU ARE", "U", "DONE", "UH UH", "YOU", "UR", "SURE", "WHAT?", "YOU\'RE",
+                                        "NEXT", "HOLD", "UH HUH", "YOUR", "LIKE"]),
+                            (" sure ", ["YOU ARE", "DONE", "LIKE", "YOU\'RE", "YOU", "HOLD", "UH HUH", "UR", "SURE",
+                                        "U", "WHAT?", "NEXT", "YOUR", "UH UH"]),
+                            (" like ", ["YOU\'RE", "NEXT", "U", "UR", "HOLD", "DONE", "UH UH", "WHAT?", "UH HUH", "YOU",
+                                        "LIKE", "SURE", "YOU ARE", "YOUR"])]
+
+    text_to_speech("""Please read the word on the top display. If there is no word, say: black.""")
+    # Get the last word in input that matches
+    while True:
+        request = read_input()
+
+        request_sanitized_array = []
+
+        for elem in step_1_display_array:
+            word = elem[0]
+            if word in request:
+                request_sanitized_array.append(word)
+        if len(request_sanitized_array) > 0:
+            request_sanitized = request_sanitized_array[-1]
+            break
+        else:
+            text_to_speech("No valid words recognized, try again.")
+
+    # Deal with same pronunciation first
+    if request_sanitized == " led " or request_sanitized == " lead " or request_sanitized == " leed ":
+        while True:
+            text_to_speech("""Did you mean: 1: l e d. 2: l e a d. 3: l e e d.""")
+            request_int = read_input_int()
+            if request_int == 1:
+                for elem in step_1_display_array:
+                    if elem[0] == " led ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 2:
+                for elem in step_1_display_array:
+                    if elem[0] == " lead ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 3:
+                for elem in step_1_display_array:
+                    if elem[0] == " leed ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+
+    elif request_sanitized == " led " or request_sanitized == " lead " or request_sanitized == " leed ":
+        while True:
+            text_to_speech("""Did you mean: 1: r e d. 2: r e a d. 3: r e e d.""")
+            request_int = read_input_int()
+            if request_int == 1:
+                for elem in step_1_display_array:
+                    if elem[0] == " red ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 2:
+                for elem in step_1_display_array:
+                    if elem[0] == " read ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 3:
+                for elem in step_1_display_array:
+                    if elem[0] == " reed ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+
+    elif request_sanitized == " your " or request_sanitized == " you're " or request_sanitized == " ur ":
+        while True:
+            text_to_speech("""Did you mean: 1: y o u r. 2: y o u \' r e. 3: u r.""")
+            request_int = read_input_int()
+            if request_int == 1:
+                for elem in step_1_display_array:
+                    if elem[0] == " your ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 2:
+                for elem in step_1_display_array:
+                    if elem[0] == " you're ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 3:
+                for elem in step_1_display_array:
+                    if elem[0] == " ur ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+
+    elif request_sanitized == " there " or request_sanitized == " they're " or request_sanitized == " their ":
+        while True:
+            text_to_speech("""Did you mean: 1: t h e r e. 2: t h e y ' r e. 3: t h e i r.""")
+            request_int = read_input_int()
+            if request_int == 1:
+                for elem in step_1_display_array:
+                    if elem[0] == " there ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 2:
+                for elem in step_1_display_array:
+                    if elem[0] == " they're ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 3:
+                for elem in step_1_display_array:
+                    if elem[0] == " their ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+
+    elif request_sanitized == " see " or request_sanitized == " c " or request_sanitized == " cee ":
+        while True:
+            text_to_speech("""Did you mean: 1: s e e. 2: c ' r e. 3: c e e.""")
+            request_int = read_input_int()
+            if request_int == 1:
+                for elem in step_1_display_array:
+                    if elem[0] == " see ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 2:
+                for elem in step_1_display_array:
+                    if elem[0] == " c ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+            elif request_int == 3:
+                for elem in step_1_display_array:
+                    if elem[0] == " cee ":
+                        text_to_speech("Read out the " + elem[1] + " word.")
+
+    # Now deal with the rest
+    else:
+        text_to_speech("I have heard the word: " + request_sanitized)
+        for elem in step_1_display_array:
+            if request_sanitized in elem[0]:
+                text_to_speech("Read out the " + elem[1] + " word.")
+
+    # Deal with step 2
+    while True:
+        request = read_input()
+
+        request_sanitized_array = []
+        for elem in step_2_display_array:
+            word = elem[0]
+            if word in request:
+                request_sanitized_array.append(word)
+        if len(request_sanitized_array) > 0:
+            request_sanitized = request_sanitized_array[-1]
+            break
+        else:
+            text_to_speech("No valid words recognized, try again.")
+
+    # Deal with same pronunciation of step 2 words
+    if (request_sanitized == " uh" or request_sanitized == " uh uh " or request_sanitized == " uh huh "
+            or request_sanitized == " u " or request_sanitized == " you "):
+        while True:
+            text_to_speech("""Did you mean: 1: u h h h. 2: u h  u h. 3: u h h u h. 4: u 5: y o u""")
+            request_int = read_input_int()
+            if request_int == 1:
+                for elem in step_2_display_array:
+                    if elem[0] == " uh":
+                        text_to_speech("Press the first button that matches one of these words: ")
+                        for word in elem[1]:
+                            text_to_speech(word)
+            elif request_int == 2:
+                for elem in step_2_display_array:
+                    if elem[0] == " uh uh ":
+                        text_to_speech("Press the first button that matches one of these words: ")
+                        for word in elem[1]:
+                            text_to_speech(word)
+            elif request_int == 3:
+                for elem in step_2_display_array:
+                    if elem[0] == " uh huh ":
+                        text_to_speech("Press the first button that matches one of these words: ")
+                        for word in elem[1]:
+                            text_to_speech(word)
+            elif request_int == 4:
+                for elem in step_2_display_array:
+                    if elem[0] == " u ":
+                        text_to_speech("Press the first button that matches one of these words: ")
+                        for word in elem[1]:
+                            text_to_speech(word)
+            elif request_int == 5:
+                for elem in step_2_display_array:
+                    if elem[0] == " you ":
+                        text_to_speech("Press the first button that matches one of these words: ")
+                        for word in elem[1]:
+                            text_to_speech(word)
+
+    elif request_sanitized == " your " or request_sanitized == " you're " or request_sanitized == " ur ":
+        while True:
+            text_to_speech("""Did you mean: 1: y o u r. 2: y o u \' r e. 3: u r.""")
+            request_int = read_input_int()
+            if request_int == 1:
+                for elem in step_2_display_array:
+                    if elem[0] == " your ":
+                        text_to_speech("Press the first button that matches one of these words: ")
+                        for word in elem[1]:
+                            text_to_speech(word)
+            elif request_int == 2:
+                for elem in step_2_display_array:
+                    if elem[0] == " you\'re ":
+                        text_to_speech("Press the first button that matches one of these words: ")
+                        for word in elem[1]:
+                            text_to_speech(word)
+            elif request_int == 3:
+                for elem in step_2_display_array:
+                    if elem[0] == " ur ":
+                        text_to_speech("Press the first button that matches one of these words: ")
+                        for word in elem[1]:
+                            text_to_speech(word)
+
+    else:
+        for elem in step_2_display_array:
+            if elem[0] == request_sanitized:
+                text_to_speech("Press the first button that matches one of these words: ")
+                for word in elem[1]:
+                    text_to_speech(word)
 
 
 def deal_with_memory():
     # 6
-    return
+
+    # Array of tuples, format (position, value)
+    pressed_buttons = []
+    # Stage 1
+    while True:
+        text_to_speech("Please read out the number on the display." +
+                       "Make sure to remember the position and values of the buttons you press," +
+                       " as ODRI can only help occasionally.")
+        request_int = read_input_int()
+
+
+        if request_int == 1:
+            text_to_speech("Press the button in the 2 position.")
+            pressed_buttons.append(("2", None))
+            break
+        elif request_int == 2:
+            text_to_speech("Press the button in the 2 position.")
+            pressed_buttons.append(("2", None))
+            break
+        elif request_int == 3:
+            text_to_speech("Press the button in the 3 position.")
+            pressed_buttons.append(("3", None))
+            break
+        elif request_int == 4:
+            text_to_speech("Press the button in the 4 position.")
+            pressed_buttons.append(("4", None))
+            break
+
+    # Stage 2
+    while True:
+        text_to_speech("Please read out the number on the display.")
+        request_int = read_input_int()
+
+        if request_int == 1:
+            text_to_speech("Press the button labeled 4")
+            pressed_buttons.append((None, "4"))
+            break
+        elif request_int == 2:
+            if pressed_buttons[0][0] is not None:
+                text_to_speech("Press the button in the " + pressed_buttons[0][0] + " position")
+                pressed_buttons.append((pressed_buttons[0][0], None))
+            else:
+                text_to_speech("Press the button in the same position as stage 1.")
+            break
+        elif request_int == 3:
+            text_to_speech("Press the button in the 1 position.")
+            pressed_buttons.append(("1", None))
+            break
+        elif request_int == 4:
+            if pressed_buttons[0][0] is not None:
+                text_to_speech("Press the button in the " + pressed_buttons[0][0] + " position")
+                pressed_buttons.append((pressed_buttons[0][0], None))
+            else:
+                text_to_speech("Press the button in the same position as stage 1.")
+            break
+
+    # Stage 3
+    while True:
+        text_to_speech("Please read out the number on the display.")
+        request_int = read_input_int()
+
+        if request_int == 1:
+            if pressed_buttons[1][1] is not None:
+                text_to_speech("Press the button with the " + pressed_buttons[1][1] + " label")
+                pressed_buttons.append((None, pressed_buttons[1][1]))
+            else:
+                text_to_speech("Press the button with the same label as stage 2.")
+            break
+        elif request_int == 2:
+            if pressed_buttons[0][1] is not None:
+                text_to_speech("Press the button with the " + pressed_buttons[0][1] + " label")
+                pressed_buttons.append((None, pressed_buttons[0][1]))
+            else:
+                text_to_speech("Press the button with the same label as stage 1.")
+            break
+        elif request_int == 3:
+            text_to_speech("Press the button in the 3 position.")
+            pressed_buttons.append(("3", None))
+            break
+        elif request_int == 4:
+            text_to_speech("Press the button with the 4 label.")
+            pressed_buttons.append((None, "4"))
+            break
+
+    # Stage 4
+    while True:
+        text_to_speech("Please read out the number on the display.")
+        request_int = read_input_int()
+        if request_int == 1:
+            if pressed_buttons[0][0] is not None:
+                text_to_speech("Press the button in the " + pressed_buttons[0][0] + " position")
+                pressed_buttons.append((pressed_buttons[0][0], None))
+            else:
+                text_to_speech("Press the button in the same position as stage 1.")
+            break
+        elif request_int == 2:
+            text_to_speech("Press the button in the 1 position.")
+            pressed_buttons.append(("1", None))
+            break
+        elif request_int == 3:
+            if pressed_buttons[1][0] is not None:
+                text_to_speech("Press the button in the " + pressed_buttons[1][0] + " position")
+                pressed_buttons.append((pressed_buttons[1][0], None))
+            else:
+                text_to_speech("Press the button in the same position as stage 2.")
+            break
+        elif request_int == 4:
+            if pressed_buttons[1][0] is not None:
+                text_to_speech("Press the button in the " + pressed_buttons[1][0] + " position")
+                pressed_buttons.append((pressed_buttons[1][0], None))
+            else:
+                text_to_speech("Press the button in the same position as stage 2.")
+            break
+
+    # Stage 5
+        while True:
+            text_to_speech("Please read out the number on the display.")
+            request_int = read_input_int()
+            if request_int == 1:
+                if pressed_buttons[0][1] is not None:
+                    text_to_speech("Press the button with the " + pressed_buttons[0][1] + " label")
+                    pressed_buttons.append((None, pressed_buttons[0][1]))
+                else:
+                    text_to_speech("Press the button with the same label as stage 1.")
+                break
+            elif request_int == 2:
+                if pressed_buttons[1][1] is not None:
+                    text_to_speech("Press the button with the " + pressed_buttons[1][1] + " label")
+                    pressed_buttons.append((None, pressed_buttons[1][1]))
+                else:
+                    text_to_speech("Press the button with the same label as stage 2.")
+                break
+            elif request_int == 3:
+                if pressed_buttons[3][1] is not None:
+                    text_to_speech("Press the button with the " + pressed_buttons[3][1] + " label")
+                    pressed_buttons.append((None, pressed_buttons[3][1]))
+                else:
+                    text_to_speech("Press the button with the same label as stage 4.")
+                break
+            elif request_int == 4:
+                if pressed_buttons[2][1] is not None:
+                    text_to_speech("Press the button with the " + pressed_buttons[2][1] + " label")
+                    pressed_buttons.append((None, pressed_buttons[2][1]))
+                else:
+                    text_to_speech("Press the button with the same label as stage 3.")
+                break
 
 
 def deal_with_morse():
     # 7
+
     return
 
 
 def deal_with_complex_wire():
     # 8
+
     return
 
 
 def deal_with_wire_sequence():
     # 9
+    red_wire_occurrences = ["C", "B", "A", "A or C", "B", "A or C", "A or B or C", "A or B", "B"]
+    blue_wire_occurrences = ["B", "A or C", "B", "A", "B", "B or C", "C", "A or C", "A"]
+    black_wire_occurrences = ["A or B or C", "A or C", "B", "A or C", "B", "B or C", "A or B", "C", "C"]
+
+    possible_wires = ["red", "blue", "black"]
+
+    red_wires_seen = 0
+    blue_wires_seen = 0
+    black_wires_seen = 0
+    for i in range(1, 4):
+        text_to_speech("""Please state the color of the three wires in order.""")
+        request = read_input()
+        request_sanitized = request.split(" ")
+        request_sanitized.pop(0)
+        request_sanitized.pop(-1)
+        for word in request_sanitized:
+            if word not in possible_wires:
+                request_sanitized.remove(word)
+
+        j = 0
+        ref_number = ["first", "second", "third"]
+
+        for wire in request_sanitized:
+            if wire == "red":
+                red_wires_seen += 1
+                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " + red_wire_occurrences[red_wires_seen-1])
+            if wire == "blue":
+                blue_wires_seen += 1
+                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " + blue_wire_occurrences[blue_wires_seen - 1])
+            if wire == "black":
+                black_wires_seen += 1
+                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " + black_wire_occurrences[black_wires_seen - 1])
+            j += 1
+
+        if i != 3:
+            text_to_speech("""Go to the next panel""")
+
     return
 
 
 def deal_with_maze():
     # 10
+
     return
 
 
 def deal_with_password():
     # 11
+
     return
 
 
 def deal_with_gas():
     # 12
+    text_to_speech("""Respond to the questions before the timer runs out. This module cannot be defused,
+     instead you must deal with it periodically until all other modules are defused.""")
     return
 
 
 def deal_with_capacitor():
     # 13
+    text_to_speech("""Discharge the capacitor before it fills up by pulling down the lever. This module cannot be defused,
+    instead you must deal with it periodically until all other modules are defused.""")
     return
 
 
