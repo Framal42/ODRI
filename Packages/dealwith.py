@@ -612,7 +612,6 @@ def deal_with_memory():
                        " as ODRI can only help occasionally.")
         request_int = read_input_int()
 
-
         if request_int == 1:
             text_to_speech("Press the button in the 2 position.")
             pressed_buttons.append(("2", None))
@@ -759,6 +758,51 @@ def deal_with_morse():
 def deal_with_complex_wire():
     # 8
 
+    reference_array = [[[False, False, False, False], "Cut the wire"],
+                       [[True, False, False, False], "Cut the wire"],
+                       [[False, True, False, False], "Do not cut the wire"],
+                       [[True, True, False, False], "If the bomb has two or more batteries, cut the wire"],
+                       [[False, False, True, False], "If the last digit of the serial number is even, cut the wire"],
+                       [[True, False, True, False], "Cut the wire"],
+                       [[False, True, True, False], "If the bomb has two or more batteries, cut the wire"],
+                       [[True, True, True, False], "If the bomb has two or more batteries, cut the wire"],
+                       [[False, False, False, True], "If the last digit of the serial number is even, cut the wire"],
+                       [[True, False, False, True], "Do not cut the wire"],
+                       [[False, True, False, True], "If the bomb has a parallel port,"
+                                                    " a wide port with two rows of circle pins, cut the wire"],
+                       [[True, True, False, True], "If the bomb has a parallel port,"
+                                                   " a wide port with two rows of circle pins, cut the wire"],
+                       [[False, False, True, True], "If the last digit of the serial number is even, cut the wire"],
+                       [[True, False, True, True], "If the bomb has a parallel port,"
+                                                   " a wide port with two rows of circle pins, cut the wire"],
+                       [[False, True, True, True], "If the last digit of the serial number is even, cut the wire"],
+                       [[True, True, True, True], "Do not cut the wire"]]
+
+    text_to_speech("""How many wires are there?""")
+    number_of_wires = read_input_int()
+
+    for i in range(0, number_of_wires):
+        star = False
+        light = False
+        red = False
+        blue = False
+        text_to_speech("""Please state the colors of the wire.
+Add "star" if there is a star and "light" if the light is on.""")
+        request = read_input()
+        if " star " in request:
+            star = True
+        if " light " in request:
+            light = True
+        if " red " in request:
+            red = True
+        if " blue " in request:
+            blue = True
+        status = [star, light, red, blue]
+        for elem in reference_array:
+            if elem[0] == status:
+                text_to_speech(elem[1])
+                continue
+
     return
 
 
@@ -789,13 +833,16 @@ def deal_with_wire_sequence():
         for wire in request_sanitized:
             if wire == "red":
                 red_wires_seen += 1
-                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " + red_wire_occurrences[red_wires_seen-1])
+                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " +
+                               red_wire_occurrences[red_wires_seen-1])
             if wire == "blue":
                 blue_wires_seen += 1
-                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " + blue_wire_occurrences[blue_wires_seen - 1])
+                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " +
+                               blue_wire_occurrences[blue_wires_seen - 1])
             if wire == "black":
                 black_wires_seen += 1
-                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " + black_wire_occurrences[black_wires_seen - 1])
+                text_to_speech("Cut the " + ref_number[j] + " wire if connected to " +
+                               black_wire_occurrences[black_wires_seen - 1])
             j += 1
 
         if i != 3:
@@ -818,15 +865,15 @@ def deal_with_password():
 
 def deal_with_gas():
     # 12
-    text_to_speech("""Respond to the questions before the timer runs out. This module cannot be defused,
+    text_to_speech("""Answer the questions before the timer runs out. This module cannot be defused,
      instead you must deal with it periodically until all other modules are defused.""")
     return
 
 
 def deal_with_capacitor():
     # 13
-    text_to_speech("""Discharge the capacitor before it fills up by pulling down the lever. This module cannot be defused,
-    instead you must deal with it periodically until all other modules are defused.""")
+    text_to_speech("""Discharge the capacitor before it fills up by pulling down the lever.
+     This module cannot be defused, instead you must deal with it periodically until all other modules are defused.""")
     return
 
 
